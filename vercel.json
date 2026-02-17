@@ -5,36 +5,8 @@
       "destination": "/index.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/config.yml",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/yaml"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
-    },
-    {
-      "source": "/admin/**",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
+      "source": "/admin",
+      "destination": "/index.html"
     }
   ]
 }
