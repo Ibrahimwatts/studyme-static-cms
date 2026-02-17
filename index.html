@@ -3,36 +3,42 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Static CMS Admin</title>
+  <title>Studyme Admin</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f8f9fa; }
+    #root { min-height: 100vh; }
+    /* Hide login screen elements */
+    [data-test-id="login-page"], .login-page, .identity, .netlify-identity-menu, .netlify-identity-widget {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
+  <div id="root"></div>
+
   <script src="./static-cms-app.js"></script>
   <script type="text/javascript">
-    // Debug logs
-    console.log("Static CMS JS loaded:", typeof window.CMS);
+    // Wait for CMS to load
+    const interval = setInterval(() => {
+      if (window.CMS && window.CMS.init) {
+        console.log("Static CMS detected - forcing dashboard");
 
-    // Force load config from root
-    fetch('/config.yml')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Config load failed: ' + response.status);
-        }
-        return response.text();
-      })
-      .then(yamlText => {
-        console.log("Config loaded successfully");
         window.CMS_MANUAL_INIT = true;
-        const config = jsyaml.load(yamlText);
-        window.CMS.init({ config });
-        console.log("Static CMS initialized with config");
-      })
-      .catch(error => {
-        console.error(error);
-        document.body.innerHTML = '<h1>Error loading config.yml</h1><p>' + error.message + '</p>';
-      });
-  </script>
+        window.CMS.init();
 
-  <!-- js-yaml for parsing YAML -->
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+        // Force hide any lingering login UI
+        document.querySelectorAll('.login-page, [data-test-id="login-page"], .identity').forEach(el => el.remove());
+
+        clearInterval(interval);
+      }
+    }, 500);
+
+    // Timeout fallback
+    setTimeout(() => {
+      clearInterval(interval);
+      console.log("Fallback: trying to init anyway");
+      if (window.CMS) window.CMS.init();
+    }, 10000);
+  </script>
 </body>
 </html>
