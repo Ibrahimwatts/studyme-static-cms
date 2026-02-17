@@ -1,12 +1,10 @@
+disableIdentity: true
+localBackend: true
+
 backend:
   name: github
   repo: Ibrahimwatts/studyme-platform
   branch: main
-  client_id: ${GITHUB_CLIENT_ID}
-  client_secret: ${GITHUB_CLIENT_SECRET}
-  auth_endpoint: https://github.com/login/oauth/authorize
-  token_endpoint: https://github.com/login/oauth/access_token
-  api_root: https://api.github.com
 
 media_folder: "public/assets/images"
 public_folder: "/assets/images"
