@@ -1,20 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Static CMS Admin</title>
-  <!-- Optional minimal styling so it's not ugly -->
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f8f9fa; }
-    #root { min-height: 100vh; }
-  </style>
-</head>
-<body>
-  <script src="./static-cms-app.js"></script>
-  <script type="text/javascript">
-    window.CMS_MANUAL_INIT = true;
-    CMS.init();
-  </script>
-</body>
-</html>
+<script type="text/javascript">
+  window.CMS_MANUAL_INIT = true;
+  CMS.registerBackend("github"); // optional, but safe
+  CMS.init({ config: { backend: { name: "github" } } }); // optional fallback
+  CMS.init(); // main init
+</script>
