@@ -1,6 +1,39 @@
-<script type="text/javascript">
-  window.CMS_MANUAL_INIT = true;
-  CMS.registerBackend("github"); // optional, but safe
-  CMS.init({ config: { backend: { name: "github" } } }); // optional fallback
-  CMS.init(); // main init
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Static CMS Admin</title>
+  <!-- Minimal styling -->
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; background: #f8f9fa; }
+    #root { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="./static-cms-app.js"></script>
+  <script type="text/javascript">
+    // Load config from /public/config.yml
+    fetch('./public/config.yml')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load config.yml: ' + response.status);
+        return response.text();
+      })
+      .then(yamlText => {
+        // Parse YAML (Static CMS needs js-yaml if not bundled)
+        const config = jsyaml.load(yamlText);
+        window.CMS_MANUAL_INIT = true;
+        CMS.init({ config });
+      })
+      .catch(error => {
+        console.error(error);
+        document.getElementById('root').innerHTML = '<h1>Error loading config</h1><p>' + error.message + '</p>';
+      });
+  </script>
+
+  <!-- js-yaml for parsing YAML (small library) -->
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+</body>
+</html>
