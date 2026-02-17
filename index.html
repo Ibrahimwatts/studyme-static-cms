@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Studyme Admin</title>
+  <title>Studyme Admin Panel</title>
   <style>
     body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f8f9fa; }
     #root { min-height: 100vh; }
-    /* Hide login screen elements */
-    [data-test-id="login-page"], .login-page, .identity, .netlify-identity-menu, .netlify-identity-widget {
+    /* Aggressively hide login elements */
+    .login-page, [data-test-id="login-page"], .identity, .netlify-identity-menu, .netlify-identity-widget, .github-login, button, .login-button, .auth-page {
       display: none !important;
     }
   </style>
@@ -16,29 +16,38 @@
 <body>
   <div id="root"></div>
 
-  <script src="./static-cms-app.js"></script>
+  <!-- Use older, more compliant version that respects disableIdentity -->
+  <script src="https://unpkg.com/static-cms@3.2.0/dist/static-cms.js"></script>
+
   <script type="text/javascript">
-    // Wait for CMS to load
-    const interval = setInterval(() => {
+    console.log("Starting forced init...");
+
+    const tryInit = () => {
       if (window.CMS && window.CMS.init) {
-        console.log("Static CMS detected - forcing dashboard");
+        console.log("CMS detected - forcing dashboard");
 
         window.CMS_MANUAL_INIT = true;
         window.CMS.init();
 
-        // Force hide any lingering login UI
-        document.querySelectorAll('.login-page, [data-test-id="login-page"], .identity').forEach(el => el.remove());
+        // Remove/hide any login UI that appears
+        document.querySelectorAll('.login-page, .identity, .github-login, button, .auth-page').forEach(el => el.remove());
 
         clearInterval(interval);
       }
-    }, 500);
+    };
+
+    const interval = setInterval(tryInit, 300);
 
     // Timeout fallback
     setTimeout(() => {
       clearInterval(interval);
-      console.log("Fallback: trying to init anyway");
-      if (window.CMS) window.CMS.init();
-    }, 10000);
+      if (window.CMS) {
+        console.log("Timeout fallback - forcing init");
+        window.CMS.init();
+      } else {
+        document.body.innerHTML = '<h1>Static CMS failed to load</h1><p>Check console for errors.</p>';
+      }
+    }, 15000);
   </script>
 </body>
 </html>
