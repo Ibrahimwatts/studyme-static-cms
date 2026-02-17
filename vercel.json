@@ -17,14 +17,8 @@
     {
       "source": "/config.yml",
       "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/yaml"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-cache"
-        }
+        { "key": "Content-Type", "value": "text/yaml" },
+        { "key": "Cache-Control", "value": "no-cache" }
       ]
     }
   ]
